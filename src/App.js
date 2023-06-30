@@ -1,24 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, createContext, useState } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { ROUTES } from "constants/routes";
+
+// Layout
+import AdminLayout from "layouts/admin/AdminLayout";
+
+// Page
+import DashboardPage from "pages/admin/DashboardPage";
+import OrderPage from "pages/admin/OrderPage";
 
 function App() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+    });
+  }, [pathname]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      <Route element={<AdminLayout />}>
+        <Route path={ROUTES.ADMIN.DASHBOARD} element={<DashboardPage />} />
+        <Route path={ROUTES.ADMIN.ORDERS} element={<OrderPage />} />
+      </Route>
+    </Routes>
   );
 }
 

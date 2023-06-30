@@ -1,0 +1,51 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+    "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-size: 14px;
+  background-color: #f1f1f1;
+
+  input:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    box-shadow: none;
+    border: 1px solid #fff;
+  }
+  ul,
+  li {
+    padding: 0px;
+    list-style: none;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  // overflow-x: hidden;
+
+  &::-webkit-scrollbar {
+    -webkit-appearance: none;
+  }
+  &::-webkit-scrollbar:vertical {
+    width: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 10px;
+  }
+}
+
+:root {
+  --header-height: 65px;
+  --sidebar-app-width: 96px;
+  --border-input-color: #ccc;
+
+  --boder-dividing-color: #d6d9db;
+  --box-shadow-default: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+}

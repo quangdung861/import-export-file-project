@@ -1,0 +1,111 @@
+.modal-overlay {
+  z-index: 99;
+  background-color: rgba(0, 0, 0, 0.4);
+  position: fixed;
+  inset: 0 0 0 0;
+  animation-name: fadeIn;
+  animation-duration: 0.2s;
+  user-select: none;
+  .container-export-info {
+    padding: 0px 12px;
+    .export-info {
+      animation-name: zoom;
+      animation-duration: 0.5s;
+      position: absolute;
+      width: 600px;
+      max-height: 220px;
+      max-width: 100%;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      top: 30%;
+      transform: translateY(-30%);
+      margin: 0 auto;
+      z-index: 2;
+      border-radius: 6px;
+      background-color: #fff;
+      .title {
+        height: 48px;
+        padding: 0 8px 0 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 500;
+        font-size: 16px;
+        > i {
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          cursor: pointer;
+          :hover {
+            background-color: #f1f1f1;
+          }
+        }
+      }
+      .content {
+        padding: 16px;
+        > .title-name {
+          margin-bottom: 16px;
+        }
+        &__item {
+          display: flex;
+          align-items: center;
+          margin-bottom: 8px;
+          > i {
+            margin-top: 1px;
+            font-size: 16px;
+            color: #ccc;
+            cursor: pointer;
+          }
+          .fa-circle-check {
+            color: #005ae0;
+          }
+          .checkbox-icon {
+            width: 16px;
+            height: 16px;
+            font-size: 16px;
+            border-radius: 50%;
+            color: transparent;
+            border: 1px solid var(--boder-dividing-color);
+          }
+          > span {
+            padding-left: 10px;
+
+            cursor: pointer;
+          }
+        }
+      }
+      .footer {
+        text-align: right;
+        margin-right: 16px;
+        .btn-cancel {
+          background-color: #ffc26f;
+          margin-right: 10px;
+        }
+        .btn-export {
+          background-color: #884a39;
+        }
+      }
+    }
+  }
+
+  @keyframes zoom {
+    0% {
+      transform: scale3d(0.3, 0.3, 0.3);
+    }
+    100% {
+    }
+  }
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+}

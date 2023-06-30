@@ -1,0 +1,83 @@
+{
+  "orders": [
+    {
+      "id": 1,
+      "fullName": "Phan Quang Dũng",
+      "dateOfBirth": "",
+      "address": "Đà Nẵng",
+      "passportId": "9999999",
+      "licenseDate": "",
+      "phoneNumber": "",
+      "mobilePhoneNumber": "0935411853",
+      "fax": "",
+      "email": "quangdung861@gmail.com",
+      "bankAccount": "",
+      "bankName": "",
+      "customerType": "Kim cương",
+      "paymentTerm": "",
+      "status": "Đang giao dịch",
+      "createdAt": 1688047920491,
+      "updatedAt": 1688047920491
+    },
+    {
+      "id": 2,
+      "fullName": "Huỳnh Thị Thảo Nguyên",
+      "dateOfBirth": "",
+      "address": "Hồ Chí Minh",
+      "passportId": "9999999",
+      "licenseDate": "",
+      "phoneNumber": "",
+      "mobilePhoneNumber": "0935411853",
+      "fax": "",
+      "email": "huynhthithaonguyen@gmail.com",
+      "bankAccount": "",
+      "bankName": "",
+      "customerType": "Bạch kim",
+      "paymentTerm": "",
+      "status": "Đang giao dịch",
+      "createdAt": 1688048367707,
+      "updatedAt": 1688048367708
+    },
+    {
+      "id": 3,
+      "fullName": "eqe",
+      "dateOfBirth": "",
+      "address": "",
+      "passportId": "22",
+      "licenseDate": "",
+      "phoneNumber": "",
+      "mobilePhoneNumber": "222",
+      "fax": "",
+      "email": "",
+      "bankAccount": "",
+      "bankName": "",
+      "customerType": "Khác",
+      "paymentTerm": "",
+      "status": "Đang giao dịch",
+      "createdAt": 1688091015512,
+      "updatedAt": 1688091015514
+    }
+  ],
+  "customerCategories": [
+    {
+      "id": 1,
+      "name": "Khác"
+    },
+    {
+      "id": 2,
+      "name": "Bạc"
+    },
+    {
+      "id": 3,
+      "name": "Vàng"
+    },
+    {
+      "id": 4,
+      "name": "Bạch kim"
+    },
+    {
+      "id": 5,
+      "name": "Kim cương"
+    }
+  ]
+}
