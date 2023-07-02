@@ -18,6 +18,11 @@ const initialState = {
     loading: false,
     error: null,
   },
+  allOrderList: {
+    data: [],
+    loading: false,
+    error: null,
+  },
 };
 
 const orderReducer = createReducer(initialState, (builder) => {
@@ -117,6 +122,48 @@ const orderReducer = createReducer(initialState, (builder) => {
         createData: {
           ...state.createData,
           error,
+        },
+      };
+    })
+    //
+    .addCase(REQUEST(ORDER_ACTION.GET_ALL_ORDER_LIST), (state, action) => {
+      return {
+        ...state,
+        allOrderList: {
+          ...state.allOrderList,
+          loading: true,
+        },
+      };
+    })
+    .addCase(SUCCESS(ORDER_ACTION.GET_ALL_ORDER_LIST), (state, action) => {
+      const { data } = action.payload;
+      return {
+        ...state,
+        allOrderList: {
+          ...state.allOrderList,
+          data,
+          loading: false,
+        },
+      };
+    })
+    .addCase(FAIL(ORDER_ACTION.GET_ALL_ORDER_LIST), (state, action) => {
+      const { error } = action.payload;
+      return {
+        state,
+        allOrderList: {
+          ...state.allOrderList,
+          error,
+        },
+      };
+    })
+    //
+    .addCase(REQUEST(ORDER_ACTION.CLEAR_ALL_ORDER_LIST), (state, action) => {
+      return {
+        ...state,
+        allOrderList: {
+          ...state.allOrderList,
+          data: [],
+          loading: true,
         },
       };
     });

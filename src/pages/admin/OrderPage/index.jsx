@@ -1,21 +1,22 @@
 import React, { useEffect, useState, useRef, useMemo } from "react";
 
-import * as S from "./styles";
 import { useDispatch, useSelector } from "react-redux";
+import DatePicker from "react-datepicker";
+import vi from "date-fns/locale/vi";
+import "react-datepicker/dist/react-datepicker.css";
+import moment from "moment";
+import * as S from "./styles";
+
 import {
   createOrderAction,
   getCustomerCategoriesAction,
   getOrderListAction,
 } from "redux/user/actions";
 
-import DatePicker from "react-datepicker";
-import vi from "date-fns/locale/vi";
-import "react-datepicker/dist/react-datepicker.css";
-import moment from "moment";
 import ModalExportFile from "components/ModalExportFile";
-
 import cardCredit from "assets/cardCredit.png";
 import cardCreditDisable from "assets/cardCreditDisable.jpg";
+import { importExcel } from "utils/file";
 
 const OrderPage = () => {
   const dispatch = useDispatch();
@@ -34,50 +35,33 @@ const OrderPage = () => {
   const [bankName, setBankName] = useState("");
   const [customerType, setCustomerType] = useState("Khác");
   const [paymentTerm, setPaymentTerm] = useState("");
-  //
-
-  const [isPaymentMethods, setIsPaymentMethods] = useState(false);
 
   // error
-
   const [errorFullName, setErrorFullName] = useState("");
   const [errorMobilePhoneNumber, setErrorMobilePhoneNumber] = useState("");
   const [errorEmail, setErrorEmail] = useState("");
   const [errorPassportId, setErrorPassportId] = useState("");
   const [errorOrderId, setErrorOrderId] = useState("");
-
+  //
+  const [messageErrorImport, setMessageErrorImport] = useState("");
   const [optionSelected, setOptionSelected] = useState("manual");
+  const [isPaymentMethods, setIsPaymentMethods] = useState(false);
 
-  const [dataExport, setDataExport] = useState([]);
-  console.log("🚀 ~ file: index.jsx:52 ~ OrderPage ~ dataExport:", dataExport);
 
-  const { customerCategoryList, orderList } = useSelector(
+  const { customerCategoryList, orderList, allOrderList } = useSelector(
     (state) => state.orderReducer
   );
   const [dropdownCargoryCustomer, setDropdownCargoryCustomer] = useState();
 
-  useEffect(() => {
-    if (orderList.data) {
-      const data = orderList.data.map((item) => {
-        return {
-          id: item.id,
-          fullName: item.fullName,
-          customerType: item.customerType,
-          address: item.address,
-          mobilePhoneNumber: item.mobilePhoneNumber,
-          email: item.email,
-          passportId: item.passportId,
-          status: item.status,
-        };
-      });
-
-      setDataExport(data);
-    }
-  }, [orderList]);
-
   const customerCategoryDropdownRef = useRef(null);
 
   const [isShowOverlayModal, setIsShowOverlayModal] = useState(false);
+  const [isShowOverlayModalImport, setIsShowOverlayModalImport] =
+    useState(false);
+
+  useEffect(() => {
+    setMessageErrorImport("");
+  }, [optionSelected]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -282,8 +266,9 @@ const OrderPage = () => {
               className={
                 item.status === "Đang giao dịch"
                   ? "chip-status chip-status-trading"
-                  : item.status === "Hoàn thành" &&
-                    "chip-status chip-status-finished"
+                  : item.status === "Hoàn thành"
+                  ? "chip-status chip-status-finished"
+                  : {}
               }
             >
               <span title={item.status}>{item.status}</span>
@@ -315,6 +300,94 @@ const OrderPage = () => {
     }
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+
+    importExcel(file)
+      .then((jsonData) => {
+        // Xử lý dữ liệu từ file Excel
+        const formattedDataRef = jsonData.map((item, index) => {
+          if (index > 0) {
+            console.log(item[1]);
+            return {
+              dateOfBirth: "",
+              licenseDate: "",
+              phoneNumber: "",
+              fax: "",
+              paymentTerm: "",
+
+              id: item[1] || "",
+              fullName: item[2] || "",
+              customerType: item[3] ? parseInt(item[3]) : "",
+              address: item[4] || "",
+              mobilePhoneNumber: item[5].toString() || "",
+              email: item[6] || "",
+              passportId: item[7] || "",
+              status: item[8] || "Đang giao dịch",
+            };
+          }
+        });
+
+        const formattedData = [...formattedDataRef].slice(2);
+
+        // Xử lý dữ liệu đã chuyển đổi
+        // setImportData(formattedData);
+
+        let truthy = true;
+
+        formattedData.forEach((item) => {
+          if (item.fullName === "") {
+            console.log(item.fullName);
+            truthy = false;
+          }
+          if (item.mobilePhoneNumber === "") {
+            truthy = false;
+          }
+
+          if (item.email !== "") {
+            const emailRegex =
+              /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            if (!emailRegex.test(email)) {
+              truthy = false;
+            }
+          }
+
+          if (item.passportId !== "") {
+            if (passportId?.length !== 7) {
+              truthy = false;
+            }
+          }
+
+          if (item.id !== "") {
+            const regex = /[a-zA-Z]/;
+            const istrue = regex.test(item.id);
+            if (!istrue) {
+              truthy = false;
+            }
+          }
+        });
+
+        if (truthy) {
+          formattedData.forEach((item, index) => {
+            dispatch(
+              createOrderAction({
+                data: formattedData[index],
+              })
+            );
+          });
+          setMessageErrorImport("Nhập tệp thành công");
+        } else {
+          setMessageErrorImport(
+            "Tệp không đúng định dạng, hoặc sai kiểu dữ liệu"
+          );
+        }
+      })
+      .catch((error) => {
+        // Xử lý lỗi
+        console.error(error);
+      });
+  };
+
   return (
     <S.Wrapper>
       <S.Container>
@@ -344,13 +417,26 @@ const OrderPage = () => {
                     ? "nav-option__item  nav-option__item--active"
                     : "nav-option__item "
                 }
-                onClick={() => {
-                  setOptionSelected("import");
-                }}
+                onClick={() => setOptionSelected("import")}
               >
-                <i className="fa-solid fa-cloud-arrow-up"></i>
-                Nhập file
+                <label htmlFor="inputFileAvatar" style={{ cursor: "pointer" }}>
+                  <i
+                    className="fa-solid fa-cloud-arrow-up"
+                    style={{ marginRight: "8px" }}
+                  ></i>
+                  Nhập file
+                </label>
+                <input
+                  type="file"
+                  id="inputFileAvatar"
+                  className="custom-file-input"
+                  // onChange={(e) => handleAvatarImage(e.target.files[0])}
+                  accept=".xlsx"
+                  onChange={handleFileChange}
+                  style={{ display: "none" }}
+                />
               </div>
+
               <div
                 className={
                   optionSelected === "export"
@@ -365,7 +451,24 @@ const OrderPage = () => {
                 <i className="fa-solid fa-cloud-arrow-up"></i>
                 Xuất file
               </div>
+              <a
+                className="nav-option__item"
+                href="https://drive.google.com/uc?export=download&id=1rcr7Eionhat1_ePMzT8haxujWbhd7cSc"
+              >
+                <i className="fa-solid fa-cloud-arrow-up"></i>
+                Tải file mẫu
+              </a>
             </div>
+            <div
+              style={
+                messageErrorImport === "Nhập tệp thành công"
+                  ? { color: "#98D8AA", paddingLeft: "8px" }
+                  : { color: "#f33a58", paddingLeft: "8px" }
+              }
+            >
+              {messageErrorImport}
+            </div>
+
             <div className="form-container">
               {optionSelected === "manual" && (
                 <>
@@ -679,19 +782,15 @@ const OrderPage = () => {
         {isShowOverlayModal && (
           <ModalExportFile
             setIsShowOverlayModal={setIsShowOverlayModal}
-            // data={{
-            //   id: orderList.data.id,
-            //   fullName: orderList.data.fullName,
-            //   customerType: orderList.data.customerType,
-            //   address: orderList.data.address,
-            //   phoneNumber: orderList.data.phoneNumber,
-            //   email: orderList.data.email,
-            //   passportId: orderList.data.passportId,
-            //   status: orderList.data.status,
-            // }}
-            data={dataExport}
+            data={orderList.data}
           />
         )}
+        {/* {isShowOverlayModalImport && (
+          <ModalImportFile
+            setIsShowOverlayModal={setIsShowOverlayModal}
+            data={dataExport}
+          />
+        )} */}
       </S.Container>
     </S.Wrapper>
   );

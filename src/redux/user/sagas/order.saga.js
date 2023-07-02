@@ -29,7 +29,9 @@ function* getOrderListSaga(action) {
       params: {
         _sort: "createdAt",
         _order: "desc",
-        _limit: 20,
+        _limit: 10,
+        _expand: "customerType",
+
       },
     });
     yield put({
@@ -48,10 +50,34 @@ function* getOrderListSaga(action) {
   }
 }
 
+function* getAllOrderListSaga(action) {
+  try {
+    const result = yield axios.get(`${API}/orders`, {
+      params: {
+        _sort: "createdAt",
+        _order: "desc",
+        _expand: "customerType",
+      },
+    });
+    yield put({
+      type: SUCCESS(ORDER_ACTION.GET_ALL_ORDER_LIST),
+      payload: {
+        data: result.data,
+      },
+    });
+  } catch (error) {
+    put({
+      type: FAIL(ORDER_ACTION.GET_ALL_ORDER_LIST),
+      payload: {
+        error,
+      },
+    });
+  }
+}
+
 function* createOrderSaga(action) {
   try {
     const { data, callback } = action.payload;
-    console.log("🚀 ~ file: order.saga.js:53 ~ function*createOrderSaga ~ callback:", callback)
     const result = yield axios.post(`${API}/orders`, {
       ...data,
     });
@@ -82,4 +108,8 @@ export default function* orderSaga() {
   );
   yield takeEvery(REQUEST(ORDER_ACTION.GET_ORDER_LIST), getOrderListSaga);
   yield takeEvery(REQUEST(ORDER_ACTION.CREATE_ORDER), createOrderSaga);
+  yield takeEvery(
+    REQUEST(ORDER_ACTION.GET_ALL_ORDER_LIST),
+    getAllOrderListSaga
+  );
 }

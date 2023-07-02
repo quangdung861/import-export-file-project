@@ -1,42 +1,42 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 
 import "./styles.scss";
-
-
+import { useDispatch, useSelector } from "react-redux";
+import {
+  clearAllorderListAction,
+  getAllOrderListAction,
+} from "redux/user/actions";
 import { exportExcel } from "utils/file";
 
+// import { AgGridReact } from "ag-grid-react";
+// import "./styles.scss";
+// import "ag-grid-enterprise";
+
 const ModalExportFile = ({ setIsShowOverlayModal, data }) => {
-  const [selectedType, setSelectedType] = useState("all");
+  const dispatch = useDispatch();
+  const [selectedType, setSelectedType] = useState("limit");
+  const { allOrderList } = useSelector((state) => state.orderReducer);
+  const [dataExport, setDataExport] = useState([]);
+  const [columnDefs, setColumnDefs] = useState([
+    {
+      field: "",
+      headerName: "Danh sách khách hàng",
+      children: [
+        { field: "id", headerName: "No.", width: 30 },
+        { field: "fullName", headerName: "Tên" },
+        { field: "customerType", headerName: "Loại" },
+        { field: "address", headerName: "Địa chỉ" },
+        { field: "mobilePhoneNumber", headerName: "Số điện thoại" },
+        { field: "email", headerName: "Email" },
+        { field: "passportId", headerName: "ID/Passport" },
+        { field: "status", headerName: "Trạng thái" },
+      ],
+    },
+  ]);
 
-  const columnNames = [
-    "STT",
-    "Mã",
-    "Tên",
-    "Loại",
-    "Địa chỉ",
-    "Số điện thoại di động",
-    "Email",
-    "PassportID",
-    "Trạng thái",
-  ];
-
-  const dataArray = data.map((item, index) => {
-    return [
-      index + 1,
-      item.id,
-      item.fullName,
-      item.customerType,
-      item.address,
-      item.mobilePhoneNumber,
-      item.email,
-      item.passportId,
-      item.status,
-    ];
-  });
-
-  const updatedData = [columnNames, ...dataArray];
-
+  const gridRef = useRef();
   const exportInfoRef = useRef();
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -52,20 +52,105 @@ const ModalExportFile = ({ setIsShowOverlayModal, data }) => {
     };
   }, []);
 
+
+
+  useEffect(() => {
+    dispatch(getAllOrderListAction());
+    return () => dispatch(clearAllorderListAction());
+  }, []);
+
+  useEffect(() => {
+    if (data && selectedType === "limit") {
+      const newData = data.map((item) => {
+        return {
+          id: item.id,
+          fullName: item.fullName,
+          customerType: item.customerType,
+          address: item.address,
+          mobilePhoneNumber: item.mobilePhoneNumber,
+          email: item.email,
+          passportId: item.passportId,
+          status: item.status,
+        };
+      });
+      setDataExport(newData);
+      return;
+    }
+
+    if (allOrderList && selectedType === "all") {
+      const newData = allOrderList.data.map((item) => {
+        return {
+          id: item.id,
+          fullName: item.fullName,
+          customerType: item.customerType,
+          address: item.address,
+          mobilePhoneNumber: item.mobilePhoneNumber,
+          email: item.email,
+          passportId: item.passportId,
+          status: item.status,
+        };
+      });
+      setDataExport(newData);
+      return;
+    }
+  }, [selectedType]);
+
+
+  const excelStyles = [
+    {
+      id: "header",
+      font: {
+        bold: true,
+        color: "#0000ff",
+      },
+    },
+  ];
+
+  const columnNames = [
+    "STT",
+    "Mã",
+    "Tên",
+    "Loại",
+    "Địa chỉ",
+    "Số điện thoại di động",
+    "Email",
+    "PassportID",
+    "Trạng thái",
+  ];
+
+  const dataArray = dataExport.map((item, index) => {
+    return [
+      index + 1,
+      item.id,
+      item.fullName,
+      item.customerType,
+      item.address,
+      item.mobilePhoneNumber,
+      item.email,
+      item.passportId,
+      item.status,
+    ];
+  });
+
+  const updatedData = [columnNames, ...dataArray];
+
   let handleOnClickExport = async () => {
-    // let res = await getListAllCodeService({
-    //   type: "CATEGORY",
-    //   limit: "",
-    //   offset: "",
-    //   keyword: ""
-    // })
-    // if (res && res.errCode == 0) {
-    await exportExcel(updatedData, "Danh sách khách hàng", "ListCategory");
-    // }
+    await exportExcel(updatedData, "Danh sách đơn hàng", "orderList");
+    setIsShowOverlayModal(false);
+
+    // gridRef.current.api.exportDataAsExcel();
   };
 
   return (
     <div className="modal-overlay">
+      <div style={{ display: "none" }}>
+        {/* <AgGridReact
+          excelStyles={excelStyles}
+          ref={gridRef}
+          columnDefs={columnDefs}
+          rowData={data}
+        /> */}
+      </div>
       <div className="container-export-info" ref={exportInfoRef}>
         <div className="export-info">
           <div className="title">
@@ -125,13 +210,15 @@ const ModalExportFile = ({ setIsShowOverlayModal, data }) => {
             >
               Thoát
             </div>
-            <div
-              className="--btn-default btn-export"
-              onClick={() => handleOnClickExport()}
-            >
-              Xuất file
-            </div>
-         
+
+            {dataExport[0] && (
+              <div
+                className="--btn-default btn-export"
+                onClick={() => handleOnClickExport()}
+              >
+                Xuất file
+              </div>
+            )}
           </div>
         </div>
       </div>
