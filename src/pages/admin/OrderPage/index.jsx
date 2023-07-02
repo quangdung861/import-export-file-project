@@ -47,7 +47,6 @@ const OrderPage = () => {
   const [optionSelected, setOptionSelected] = useState("manual");
   const [isPaymentMethods, setIsPaymentMethods] = useState(false);
 
-
   const { customerCategoryList, orderList, allOrderList } = useSelector(
     (state) => state.orderReducer
   );
@@ -400,64 +399,69 @@ const OrderPage = () => {
           </div>
           <div className="create-order__content">
             <div className="nav-option">
-              <div
-                className={
-                  optionSelected === "manual"
-                    ? "nav-option__item  nav-option__item--active"
-                    : "nav-option__item "
-                }
-                onClick={() => setOptionSelected("manual")}
-              >
-                <i className="fa-solid fa-check"></i>
-                Thêm mới
-              </div>
-              <div
-                className={
-                  optionSelected === "import"
-                    ? "nav-option__item  nav-option__item--active"
-                    : "nav-option__item "
-                }
-                onClick={() => setOptionSelected("import")}
-              >
-                <label htmlFor="inputFileAvatar" style={{ cursor: "pointer" }}>
-                  <i
-                    className="fa-solid fa-cloud-arrow-up"
-                    style={{ marginRight: "8px" }}
-                  ></i>
-                  Nhập file
-                </label>
-                <input
-                  type="file"
-                  id="inputFileAvatar"
-                  className="custom-file-input"
-                  // onChange={(e) => handleAvatarImage(e.target.files[0])}
-                  accept=".xlsx"
-                  onChange={handleFileChange}
-                  style={{ display: "none" }}
-                />
-              </div>
+              <div className="nav-option-list">
+                <div
+                  className={
+                    optionSelected === "manual"
+                      ? "nav-option-list__item  nav-option-list__item--active"
+                      : "nav-option-list__item "
+                  }
+                  onClick={() => setOptionSelected("manual")}
+                >
+                  <i className="fa-solid fa-check"></i>
+                  Thêm mới
+                </div>
+                <div
+                  className={
+                    optionSelected === "import"
+                      ? "nav-option-list__item  nav-option-list__item--active"
+                      : "nav-option-list__item "
+                  }
+                  onClick={() => setOptionSelected("import")}
+                >
+                  <label
+                    htmlFor="inputFileAvatar"
+                    style={{ cursor: "pointer" }}
+                  >
+                    <i
+                      className="fa-solid fa-cloud-arrow-up"
+                      style={{ marginRight: "8px" }}
+                    ></i>
+                    Nhập file
+                  </label>
+                  <input
+                    type="file"
+                    id="inputFileAvatar"
+                    className="custom-file-input"
+                    // onChange={(e) => handleAvatarImage(e.target.files[0])}
+                    accept=".xlsx"
+                    onChange={handleFileChange}
+                    style={{ display: "none" }}
+                  />
+                </div>
 
-              <div
-                className={
-                  optionSelected === "export"
-                    ? "nav-option__item  nav-option__item--active"
-                    : "nav-option__item "
-                }
-                onClick={() => {
-                  setOptionSelected("export");
-                  setIsShowOverlayModal(true);
-                }}
-              >
-                <i className="fa-solid fa-cloud-arrow-up"></i>
-                Xuất file
+                <div
+                  className={
+                    optionSelected === "export"
+                      ? "nav-option-list__item  nav-option-list__item--active"
+                      : "nav-option-list__item "
+                  }
+                  onClick={() => {
+                    setOptionSelected("export");
+                    setIsShowOverlayModal(true);
+                  }}
+                >
+                  <i className="fa-solid fa-cloud-arrow-up"></i>
+                  Xuất file
+                </div>
+                <a
+                  className="nav-option-list__item"
+                  href="https://drive.google.com/uc?export=download&id=1rcr7Eionhat1_ePMzT8haxujWbhd7cSc"
+                >
+                  <i className="fa-solid fa-cloud-arrow-up"></i>
+                  Tải file mẫu
+                </a>
               </div>
-              <a
-                className="nav-option__item"
-                href="https://drive.google.com/uc?export=download&id=1rcr7Eionhat1_ePMzT8haxujWbhd7cSc"
-              >
-                <i className="fa-solid fa-cloud-arrow-up"></i>
-                Tải file mẫu
-              </a>
             </div>
             <div
               style={
@@ -778,7 +782,6 @@ const OrderPage = () => {
             <div className="order-list">{renderOrderList}</div>
           </div>
         </div>
-
         {isShowOverlayModal && (
           <ModalExportFile
             setIsShowOverlayModal={setIsShowOverlayModal}

@@ -1,10 +1,10 @@
-import { styled } from "styled-components";
+import styled, { css } from "styled-components";
 import "_variables.scss";
 
 export const Wrapper = styled.div``;
 
 export const Container = styled.div`
-  padding-bottom: 50px;
+  padding-bottom: 24px;
   .create-order {
     padding: 16px;
     &__header {
@@ -27,40 +27,63 @@ export const Container = styled.div`
       background-color: #fff;
       overflow: hidden;
       .nav-option {
-        display: flex;
-        align-items: center;
-        height: 40px;
-        line-height: 40px;
-        border-radius: 4px;
+        width: 100%;
         background-color: #89cffd;
-        &__item {
+        .nav-option-list {
+          /* width: 100%; */
           display: flex;
           align-items: center;
-          padding: 0 12px;
-          font-weight: 500;
-          text-transform: uppercase;
-          white-space: nowrap;
-          transition: all 0.2s ease;
-          user-select: none;
-          color: #fff;
-          background-color: transparent;
-          cursor: pointer;
-          > i {
-            margin-right: 8px;
+          flex-direction: row;
+          height: 40px;
+          line-height: 40px;
+          border-radius: 4px;
+          overflow: hidden;
+          position: relative;
+          /* max-width: 576px; */
+          /* min-width: 576px;
+          max-width: 576px; */
+          overflow-x: auto;
+          &::-webkit-scrollbar {
+            -webkit-appearance: none;
           }
-          &:hover {
-            color: #89cffd;
-            background-color: #fff;
+          &::-webkit-scrollbar:horizontal {
+            height: 0;
+          }
+          &::-webkit-scrollbar-thumb {
+            background-color: #ccc;
+            border-radius: 10px;
+          }
+
+          &__item {
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            user-select: none;
+            color: #fff;
+            background-color: transparent;
+            cursor: pointer;
+            > i {
+              margin-right: 8px;
+            }
+            &:hover {
+              color: #89cffd;
+              background-color: #fff;
+            }
+          }
+          &__item:first-child {
+            border-top-left-radius: 4px;
           }
         }
-        &__item:first-child {
-          border-top-left-radius: 4px;
+        .nav-option__item--active {
+          color: #89cffd;
+          background-color: #fff;
         }
       }
-      .nav-option__item--active {
-        color: #89cffd;
-        background-color: #fff;
-      }
+
       .form-container {
         > #create-order-form {
           display: flex;
@@ -248,22 +271,32 @@ export const Container = styled.div`
   .order-list-container {
     margin: 16px;
     border-radius: 6px;
-    overflow: hidden;
     overflow-x: scroll;
+    height:100%;  
+
+    /* overflow:hidden;
+    overflow:initial; */
+
+    /* overflow-x: scroll; */
 
     &::-webkit-scrollbar {
-      -webkit-appearance: none;
+      /* -webkit-appearance: none; */
+      height: 11px;
     }
     &::-webkit-scrollbar:horizontal {
       height: 11px;
     }
     &::-webkit-scrollbar-thumb {
-      background-color: #ccc;
+      background-image: linear-gradient(to right, #ffa400, #00aefd);
       border-radius: 8px;
     }
+
     .order-list-content {
+
+   
       width: 1320px;
       margin: 0 auto;
+
       .order-title-list {
         display: flex;
         height: 52px;
@@ -301,6 +334,8 @@ export const Container = styled.div`
             }
           }
           .status {
+           display: flex;
+           justify-content: center;
             .chip-status {
               display: flex;
               justify-content: center;
@@ -354,13 +389,25 @@ export const Container = styled.div`
           > #create-order-form {
             > .form-item {
               width: 100%;
-              margin-right: 60px;
+              /* margin-right: 60px; */
+              margin: 0 0 24px 0;
+              justify-content: center;
               > label {
+                width: 150px;
+                white-space: wrap;
               }
               > input {
                 width: 100%;
                 max-width: 300px;
               }
+            }
+            .box-action {
+              padding-right: 15%;
+            }
+          }
+          .box-payment {
+            > img {
+              margin-right: 13%;
             }
           }
         }
@@ -384,7 +431,13 @@ export const Container = styled.div`
               }
             }
             .box-action {
-              justify-content: center;
+              justify-content: flex-end;
+              padding-right: 0%;
+            }
+          }
+          .box-payment {
+            > img {
+              margin-right: 0;
             }
           }
         }
