@@ -730,10 +730,10 @@ const OrderPage = () => {
                     </div>
 
                     <div className="box-action">
-                      <button className="--btn-default btn-cancel">
+                      <button type="button" className="--btn-default btn-cancel">
                         Thoát
                       </button>
-                      <button className=" --btn-default btn-create-order">
+                      <button type="submit" className=" --btn-default btn-create-order">
                         Lưu
                       </button>
                     </div>
