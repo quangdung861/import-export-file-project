@@ -152,6 +152,7 @@ export const Container = styled.div`
                 }
               }
             }
+
             .error-message {
               position: absolute;
               top: 33px;
@@ -399,7 +400,6 @@ export const Container = styled.div`
                 max-width: 300px;
               }
               .error-message {
-                top: 34px;
                 left: 44%;
               }
             }
