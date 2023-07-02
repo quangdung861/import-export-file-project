@@ -272,7 +272,7 @@ export const Container = styled.div`
     margin: 16px;
     border-radius: 6px;
     overflow-x: scroll;
-    height:100%;  
+    height: 100%;
 
     /* overflow:hidden;
     overflow:initial; */
@@ -292,8 +292,6 @@ export const Container = styled.div`
     }
 
     .order-list-content {
-
-   
       width: 1320px;
       margin: 0 auto;
 
@@ -334,8 +332,8 @@ export const Container = styled.div`
             }
           }
           .status {
-           display: flex;
-           justify-content: center;
+            display: flex;
+            justify-content: center;
             .chip-status {
               display: flex;
               justify-content: center;
@@ -399,6 +397,10 @@ export const Container = styled.div`
               > input {
                 width: 100%;
                 max-width: 300px;
+              }
+              .error-message {
+                top: 34px;
+                left: 44%;
               }
             }
             .box-action {
