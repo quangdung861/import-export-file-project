@@ -21,6 +21,8 @@ import { importExcel } from "utils/file";
 const OrderPage = () => {
   const dispatch = useDispatch();
 
+  const [rangescroll, setrangescroll] = useState(0);
+
   const [orderId, setOrderId] = useState("");
   const [fullName, setFullName] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
@@ -235,33 +237,24 @@ const OrderPage = () => {
   const renderOrderList = useMemo(() => {
     return orderList.data.map((item) => {
       return (
-        <div className="order-item" key={item.id}>
-          <div
-            className="order-id"
-            style={{ width: "120px", color: "#0088FF" }}
-          >
+        <tr key={item.id} className="order-item">
+          <td className="order-id" style={{ color: "#0088FF" }}>
             <span title={item.id}>{item.id}</span>
-          </div>
-          <div className="fullName" style={{ width: "180px" }}>
+          </td>
+          <td className="fullName">
             <span title={item.fullName}>{item.fullName}</span>
-          </div>
-          <div className="category" style={{ width: "160px" }}>
+          </td>
+          <td className="category">
             <span title={item.customerType}>{item.customerType}</span>
-          </div>
-          <div className="address" style={{ width: "180px" }}>
+          </td>
+          <td className="address">
             <span title={item.address}> {item.address}</span>
-          </div>
-          <div className="phone-number" style={{ width: "160px" }}>
+          </td>
+          <td className="phone-number">
             <span title={item.mobilePhoneNumber}>{item.mobilePhoneNumber}</span>
-          </div>
-          <div className="email" style={{ width: "180px" }}>
-            <span title={item.email}>{item.email}</span>
-          </div>
-          <div className="passport-id" style={{ width: "160px" }}>
-            <span title={item.passportId}>{item.passportId}</span>
-          </div>
-          <div className="status" style={{ width: "160px" }}>
-            <div
+          </td>
+          <td className="status">
+            <span
               className={
                 item.status === "Đang giao dịch"
                   ? "chip-status chip-status-trading"
@@ -271,9 +264,15 @@ const OrderPage = () => {
               }
             >
               <span title={item.status}>{item.status}</span>
-            </div>
-          </div>
-        </div>
+            </span>
+          </td>
+          <td className="email">
+            <span title={item.email}>{item.email}dsadsadsadsadsa</span>
+          </td>
+          <td className="passport-id">
+            <span title={item.passportId}>{item.passportId}</span>
+          </td>
+        </tr>
       );
     });
   }, [orderList.data]);
@@ -386,6 +385,50 @@ const OrderPage = () => {
         console.error(error);
       });
   };
+
+  // const handleInputChange = (e) => {
+  //   setrangescroll(parseFloat(e.target.value));
+  // };
+
+  // const handleMouseUp = () => {
+  //   setrangescroll(Math.round(rangescroll / 0.0001) * 0.0001); // Làm tròn giá trị cho phù hợp với bước nhảy 0.0001
+  // };
+
+  const containerRef = useRef(null);
+  const [scrollbarValue, setScrollbarValue] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (containerRef.current) {
+        const value = containerRef.current.scrollLeft;
+        setScrollbarValue(value);
+      }
+    };
+
+    if (containerRef.current) {
+      containerRef.current.addEventListener("scroll", handleScroll);
+    }
+
+    return () => {
+      if (containerRef.current) {
+        containerRef.current.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, []);
+
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = document.querySelector(".order-list-content")?.offsetWidth;
+      setWindowWidth(width);
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
     <S.Wrapper>
@@ -730,10 +773,16 @@ const OrderPage = () => {
                     </div>
 
                     <div className="box-action">
-                      <button type="button" className="--btn-default btn-cancel">
+                      <button
+                        type="button"
+                        className="--btn-default btn-cancel"
+                      >
                         Thoát
                       </button>
-                      <button type="submit" className=" --btn-default btn-create-order">
+                      <button
+                        type="submit"
+                        className=" --btn-default btn-create-order"
+                      >
                         Lưu
                       </button>
                     </div>
@@ -750,37 +799,62 @@ const OrderPage = () => {
             </div>
           </div>
         </div>
-
         <div className="order-list-container">
           <div className="order-list-content">
-            <div className="order-title-list">
-              <div className="order-title-item" style={{ width: "120px" }}>
-                Mã đơn hàng
-              </div>
-              <div className="order-title-item" style={{ width: "180px" }}>
-                Tên khách hàng
-              </div>
-              <div className="order-title-item" style={{ width: "160px" }}>
-                Loại
-              </div>
-              <div className="order-title-item" style={{ width: "180px" }}>
-                Địa chỉ
-              </div>
-              <div className="order-title-item" style={{ width: "160px" }}>
-                Số điện thoại
-              </div>
-              <div className="order-title-item" style={{ width: "180px" }}>
-                Email
-              </div>
-              <div className="order-title-item" style={{ width: "160px" }}>
-                ID/ Passport
-              </div>
-              <div className="order-title-item" style={{ width: "160px" }}>
-                Trạng thái
-              </div>
-            </div>
-            <div className="order-list">{renderOrderList}</div>
+            <table
+              id="table"
+              style={{ transform: `translateX(-${scrollbarValue}px)` }}
+            >
+              <thead>
+                <tr className="order-title-list">
+                  <th className="order-title-item codeId">Mã đơn hàng</th>
+                  <th className="order-title-item full-name">Tên khách hàng</th>
+                  <th className="order-title-item category">Loại</th>
+                  <th className="order-title-item address">Địa chỉ</th>
+                  <th className="order-title-item phone-number">
+                    Số điện thoại
+                  </th>
+                  <th className="order-title-item status">Trạng thái</th>
+                  <th className="order-title-item email">Email</th>
+                  <th className="order-title-item passportId">ID/ Passport</th>
+                </tr>
+              </thead>
+              <tbody className="order-list">{renderOrderList}</tbody>
+            </table>
           </div>
+        </div>
+        {/* <input
+          id="range"
+          type="range"
+          onChange={(e) => setrangescroll(e.target.value)}
+          // onMouseUp={handleMouseUp}
+          min="0"
+          max="100"
+          step="0.000001"
+          value={rangescroll}
+          style={{ position: "fixed", bottom: "8px" }}
+        /> */}
+
+        <div
+          ref={containerRef}
+          className="scrollbar-container"
+          style={{
+            width: windowWidth,
+            height: "20px",
+            overflow: "hidden",
+            overflowX: "scroll",
+            position: "fixed",
+            bottom: "8px",
+            margin: "0 16px",
+          }}
+        >
+          <div
+            className="scrollbar-x"
+            style={{
+              width: document.querySelector("#table")?.offsetWidth,
+              height: "20px",
+            }}
+          ></div>
         </div>
         {isShowOverlayModal && (
           <ModalExportFile

@@ -1,10 +1,26 @@
 import styled, { css } from "styled-components";
 import "_variables.scss";
+import isPropValid from "@emotion/is-prop-valid";
 
 export const Wrapper = styled.div``;
 
-export const Container = styled.div`
+// const isValidProp = (prop) => {   CHECK ĐIỀU KIỆN HỢP LỆ (CÓ ĐÚNG TÊN, GIÁ TRỊ KHÔNG)
+//   // Mảng các điều kiện
+//   const conditions = [
+//     prop === 'valid',
+//     prop !== 'invalid',
+//     prop > 0,
+//   ];
+
+//   // Kiểm tra tất cả các điều kiện trong mảng
+//   return conditions.every((condition) => condition);
+// };
+
+export const Container = styled.div.withConfig({
+  shouldForwardProp: (prop) => isPropValid(prop),
+})`
   padding-bottom: 24px;
+  overflow-x: hidden;
   .create-order {
     padding: 16px;
     &__header {
@@ -37,23 +53,7 @@ export const Container = styled.div`
           height: 40px;
           line-height: 40px;
           border-radius: 4px;
-          overflow: hidden;
           position: relative;
-          /* max-width: 576px; */
-          /* min-width: 576px;
-          max-width: 576px; */
-          overflow-x: auto;
-          &::-webkit-scrollbar {
-            -webkit-appearance: none;
-          }
-          &::-webkit-scrollbar:horizontal {
-            height: 0;
-          }
-          &::-webkit-scrollbar-thumb {
-            background-color: #ccc;
-            border-radius: 10px;
-          }
-
           &__item {
             display: flex;
             align-items: center;
@@ -272,7 +272,7 @@ export const Container = styled.div`
   .order-list-container {
     margin: 16px;
     border-radius: 6px;
-    overflow-x: scroll;
+    /* overflow-x: scroll; */
     height: 100%;
 
     /* overflow:hidden;
@@ -280,8 +280,7 @@ export const Container = styled.div`
 
     /* overflow-x: scroll; */
 
-    &::-webkit-scrollbar {
-      /* -webkit-appearance: none; */
+    /* &::-webkit-scrollbar {
       height: 11px;
     }
     &::-webkit-scrollbar:horizontal {
@@ -290,82 +289,190 @@ export const Container = styled.div`
     &::-webkit-scrollbar-thumb {
       background-image: linear-gradient(to right, #ffa400, #00aefd);
       border-radius: 8px;
-    }
+    } */
 
     .order-list-content {
-      width: 1320px;
-      margin: 0 auto;
-
-      .order-title-list {
-        display: flex;
-        height: 52px;
-        background-color: #e3e6e9;
-        .order-title-item {
+      table {
+        border-collapse: collapse;
+        .order-title-list {
           height: 52px;
-          line-height: 52px;
-          padding: 8px;
-          overflow: hidden;
-          font-size: inherit;
-          font-weight: 500;
-          padding-top: 0;
-          white-space: nowrap;
-          text-overflow: ellipsis;
-        }
-      }
-      .order-list {
-        background-color: #fff;
-        width: 100%;
-        .order-item {
-          display: flex;
-          width: 100%;
-          border-bottom: 1px solid var(--boder-dividing-color);
-          > div {
+          background-color: #e3e6e9;
+          .order-title-item {
+            text-align: left;
             height: 52px;
-            display: flex;
-            align-items: center;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            line-height: 52px;
             padding: 0 8px;
-            > span {
-              text-overflow: ellipsis;
-              overflow: hidden;
-            }
+            overflow: hidden;
+            font-size: inherit;
+            font-weight: 500;
+            padding-top: 0;
+            white-space: nowrap;
+            text-overflow: ellipsis;
           }
-          .status {
-            display: flex;
-            justify-content: center;
-            .chip-status {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              height: 1.7rem;
-              line-height: 1.7rem;
-              padding: 0px 0.5rem;
-              padding: 2px 16px;
-              text-overflow: ellipsis;
+          th.codeId {
+            min-width: 120px;
+            max-width: 120px;
+          }
+          th.full-name {
+            max-width: 180px;
+            min-width: 180px;
+          }
+          th.category {
+            max-width: 160px;
+            min-width: 160px;
+          }
+          th.address {
+            min-width: 180px;
+            max-width: 180px;
+          }
+          th.phone-number {
+            min-width: 160px;
+            max-width: 160px;
+          }
+          th.email {
+            min-width: 180px;
+            max-width: 180px;
+          }
+          th.passportId {
+            min-width: 160px;
+            max-width: 160px;
+          }
+          th.status {
+            min-width: 180px;
+            max-width: 180px;
+          }
+        }
+
+        .order-list {
+          background-color: #fff;
+          width: 100%;
+
+          tr.order-item {
+            border-bottom: 1px solid var(--boder-dividing-color);
+            height: 52px;
+            > td {
               white-space: nowrap;
               overflow: hidden;
-              border-radius: 20px;
+              text-overflow: ellipsis;
+              padding: 0 8px;
+              > span {
+                text-overflow: ellipsis;
+                overflow: hidden;
+              }
             }
-            .chip-status-trading {
-              color: rgb(228, 156, 6);
-              border: 1px solid rgb(255, 223, 155);
-              background-color: rgb(255, 247, 231);
-            }
-            .chip-status-finished {
-              color: rgb(13, 180, 115);
-              border: 1px solid rgb(159, 237, 207);
-              background-color: rgb(243, 252, 249);
+            td.status {
+              width: 100%;
+              .chip-status {
+                display: inline-block;
+                height: 1.7rem;
+                padding: 2px 16px;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+                border-radius: 20px;
+              }
+              .chip-status-trading {
+                color: rgb(228, 156, 6);
+                border: 1px solid rgb(255, 223, 155);
+                background-color: rgb(255, 247, 231);
+              }
+              .chip-status-finished {
+                color: rgb(13, 180, 115);
+                border: 1px solid rgb(159, 237, 207);
+                background-color: rgb(243, 252, 249);
+              }
             }
           }
-        }
-        .order-item:last-child {
-          border-bottom: none;
+          td.codeId {
+            min-width: 120px;
+            max-width: 120px;
+          }
+          td.full-name {
+            max-width: 180px;
+            min-width: 180px;
+          }
+          td.category {
+            max-width: 160px;
+            min-width: 160px;
+          }
+          td.address {
+            min-width: 180px;
+            max-width: 180px;
+          }
+          td.phone-number {
+            min-width: 160px;
+            max-width: 160px;
+          }
+          td.email {
+            min-width: 180px;
+            max-width: 180px;
+          }
+          td.passportId {
+            min-width: 160px;
+            max-width: 160px;
+          }
+          td.status {
+            min-width: 180px;
+            max-width: 180px;
+          }
+          .order-item:last-child {
+            border-bottom: none;
+          }
         }
       }
     }
   }
+
+  .scrollbar-container {
+    &::-webkit-scrollbar {
+      -webkit-appearance: none;
+    }
+    &::-webkit-scrollbar:horizontal {
+      height: 13px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-image: linear-gradient(to right, #ffa400, #00aefd);
+      border-radius: 8px;
+    }
+  }
+
+  /* #range {
+    width: 100%;
+  } */
+  /* Tắt các giao diện mặc định của trình duyệt */
+  /* input[type="range"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 20px;
+    background-color: transparent;
+    border-radius: 10px;
+  } */
+  /* Tùy chỉnh giao diện của thumb cho các trình duyệt tương ứng */
+  /* input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 600px;
+    height: 20px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+  }
+
+  input[type="range"]::-moz-range-thumb {
+    width: 600px;
+    height: 20px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  input[type="range"]::-ms-thumb {
+    width: 600px;
+    height: 20px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+    cursor: pointer;
+  } */
 
   @media only screen and (max-width: 992px) {
     .create-order {
