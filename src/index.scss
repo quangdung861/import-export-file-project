@@ -38,16 +38,15 @@ body {
   &::-webkit-scrollbar {
     width: 10px;
   }
+  &::-webkit-scrollbar:horizontal {
+    height: 0px;
+  }
   &::-webkit-scrollbar-thumb {
     background-image: linear-gradient(to bottom, #ffa400, #00aefd);
     border-radius: 10px;
   }
-}
 
-html {
-  > body {
-    overflow-x: hidden;
-  }
+
 }
 
 
