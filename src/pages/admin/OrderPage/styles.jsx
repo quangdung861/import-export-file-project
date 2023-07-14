@@ -2,8 +2,8 @@ import styled, { css } from "styled-components";
 import "_variables.scss";
 import isPropValid from "@emotion/is-prop-valid";
 
-export const Wrapper = styled.div``;
-
+export const Wrapper = styled.div`
+`;
 // const isValidProp = (prop) => {   CHECK ĐIỀU KIỆN HỢP LỆ (CÓ ĐÚNG TÊN, GIÁ TRỊ KHÔNG)
 //   // Mảng các điều kiện
 //   const conditions = [
@@ -20,7 +20,6 @@ export const Container = styled.div.withConfig({
   shouldForwardProp: (prop) => isPropValid(prop),
 })`
   padding-bottom: 24px;
-  overflow-x: hidden;
   .create-order {
     padding: 16px;
     &__header {
@@ -269,11 +268,35 @@ export const Container = styled.div.withConfig({
     }
   }
 
+ 
   .order-list-container {
     margin: 16px;
     border-radius: 6px;
-    /* overflow-x: scroll; */
     height: 100%;
+
+    .scrollbar-container {
+      position: -webkit-sticky;
+      position: sticky;
+      bottom: 0;  
+      bottom: 10px;
+      overflow: hidden;
+      overflow-x: scroll;
+      z-index: 99;
+
+      &::-webkit-scrollbar {
+        -webkit-appearance: none;
+      }
+      &::-webkit-scrollbar:horizontal {
+        height: 13px;
+      }
+      &::-webkit-scrollbar-thumb {
+        background-image: linear-gradient(to right, #ffa400, #00aefd);
+        border-radius: 8px;
+      }
+    }
+
+    /* overflow-x: hidden; */
+
 
     /* overflow:hidden;
     overflow:initial; */
@@ -420,19 +443,6 @@ export const Container = styled.div.withConfig({
           }
         }
       }
-    }
-  }
-
-  .scrollbar-container {
-    &::-webkit-scrollbar {
-      -webkit-appearance: none;
-    }
-    &::-webkit-scrollbar:horizontal {
-      height: 13px;
-    }
-    &::-webkit-scrollbar-thumb {
-      background-image: linear-gradient(to right, #ffa400, #00aefd);
-      border-radius: 8px;
     }
   }
 

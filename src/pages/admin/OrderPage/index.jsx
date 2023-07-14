@@ -799,6 +799,7 @@ const OrderPage = () => {
             </div>
           </div>
         </div>
+
         <div className="order-list-container">
           <div className="order-list-content">
             <table
@@ -822,6 +823,23 @@ const OrderPage = () => {
               <tbody className="order-list">{renderOrderList}</tbody>
             </table>
           </div>
+          <div
+            className="scrollbar-container"
+            ref={containerRef}
+            style={{
+              width: windowWidth,
+              height: "20px",
+            }}
+          >
+            <div
+              className="scrollbar-x"
+              style={{
+                width: document.querySelector("#table")?.offsetWidth,
+                height: "20px",
+              }}
+            ></div>
+            <div style={{ color: "red" }}>dsadsaihfashflabshnfsa</div>
+          </div>
         </div>
         {/* <input
           id="range"
@@ -835,27 +853,6 @@ const OrderPage = () => {
           style={{ position: "fixed", bottom: "8px" }}
         /> */}
 
-        <div
-          ref={containerRef}
-          className="scrollbar-container"
-          style={{
-            width: windowWidth,
-            height: "20px",
-            overflow: "hidden",
-            overflowX: "scroll",
-            position: "fixed",
-            bottom: "8px",
-            margin: "0 16px",
-          }}
-        >
-          <div
-            className="scrollbar-x"
-            style={{
-              width: document.querySelector("#table")?.offsetWidth,
-              height: "20px",
-            }}
-          ></div>
-        </div>
         {isShowOverlayModal && (
           <ModalExportFile
             setIsShowOverlayModal={setIsShowOverlayModal}
