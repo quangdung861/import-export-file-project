@@ -27,8 +27,7 @@ body {
     color: inherit;
   }
 
-
-  overflow-x: hidden;
+  // overflow-x: hidden;
 
   // &::-webkit-scrollbar {
   //   -webkit-appearance: none;
@@ -44,6 +43,13 @@ body {
     border-radius: 10px;
   }
 }
+
+html {
+  > body {
+    overflow-x: hidden;
+  }
+}
+
 
 :root {
   --header-height: 65px;

@@ -29,7 +29,7 @@ function* getOrderListSaga(action) {
       params: {
         _sort: "createdAt",
         _order: "desc",
-        // _limit: 10,
+        _limit: 10,
         _expand: "customerType",
 
       },
