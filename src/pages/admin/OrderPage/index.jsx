@@ -5,6 +5,7 @@ import DatePicker from "react-datepicker";
 import vi from "date-fns/locale/vi";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from "moment";
+import InfiniteScroll from "react-infinite-scroll-component";
 import * as S from "./styles";
 
 import {
@@ -81,7 +82,7 @@ const OrderPage = () => {
 
   useEffect(() => {
     dispatch(getCustomerCategoriesAction());
-    dispatch(getOrderListAction());
+    dispatch(getOrderListAction({ limit: 3 }));
   }, []);
 
   const renderCustomerCategories = () => {
@@ -229,10 +230,19 @@ const OrderPage = () => {
     }
   };
 
-  // console.log(
-  //   "🚀 ~ file: index.jsx:78 ~ OrderPage ~ startDate:",
-  //   moment(startDate).format("DD/MM/YYYY")
-  // );
+  const [hasMore, setHasMore] = useState(true);
+
+  const [limitOrderList, setLimitOrderList] = useState(3);
+
+  const fetchMoreData = () => {
+    console.log("ahihi");
+    if (orderList.data.length < orderList.meta.total) {
+      setLimitOrderList(limitOrderList + 3);
+      dispatch(getOrderListAction({ limit: limitOrderList + 3 }));
+    } else {
+      setHasMore(false);
+    }
+  };
 
   const renderOrderList = useMemo(() => {
     return orderList.data.map((item) => {
@@ -799,29 +809,41 @@ const OrderPage = () => {
             </div>
           </div>
         </div>
-
         <div className="order-list-container">
           <div className="order-list-content">
-            <table
-              id="table"
-              style={{ transform: `translateX(-${scrollbarValue}px)` }}
+            <InfiniteScroll
+              dataLength={orderList.data.length}
+              next={fetchMoreData}
+              hasMore={hasMore}
+              loader={<h4>Loading...</h4>}
+              endMessage={<p>You have seen all the data.</p>}
+              style={{ overflow: "hidden" }}
             >
-              <thead>
-                <tr className="order-title-list">
-                  <th className="order-title-item codeId">Mã đơn hàng</th>
-                  <th className="order-title-item full-name">Tên khách hàng</th>
-                  <th className="order-title-item category">Loại</th>
-                  <th className="order-title-item address">Địa chỉ</th>
-                  <th className="order-title-item phone-number">
-                    Số điện thoại
-                  </th>
-                  <th className="order-title-item status">Trạng thái</th>
-                  <th className="order-title-item email">Email</th>
-                  <th className="order-title-item passportId">ID/ Passport</th>
-                </tr>
-              </thead>
-              <tbody className="order-list">{renderOrderList}</tbody>
-            </table>
+              <table
+                id="table"
+                style={{ transform: `translateX(-${scrollbarValue}px)` }}
+              >
+                <thead>
+                  <tr className="order-title-list">
+                    <th className="order-title-item codeId">Mã đơn hàng</th>
+                    <th className="order-title-item full-name">
+                      Tên khách hàng
+                    </th>
+                    <th className="order-title-item category">Loại</th>
+                    <th className="order-title-item address">Địa chỉ</th>
+                    <th className="order-title-item phone-number">
+                      Số điện thoại
+                    </th>
+                    <th className="order-title-item status">Trạng thái</th>
+                    <th className="order-title-item email">Email</th>
+                    <th className="order-title-item passportId">
+                      ID/ Passport
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="order-list">{renderOrderList}</tbody>
+              </table>
+            </InfiniteScroll>
           </div>
           <div
             className="scrollbar-container"

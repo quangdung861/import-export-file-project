@@ -25,19 +25,23 @@ function* getCustomerCategoryListSaga(action) {
 
 function* getOrderListSaga(action) {
   try {
+    const { limit } = action.payload;
+    console.log("🚀 ~ file: order.saga.js:29 ~ function*getOrderListSaga ~ limit:", limit)
     const result = yield axios.get(`${API}/orders`, {
       params: {
         _sort: "createdAt",
         _order: "desc",
-        _limit: 10,
+        ...(limit && { _limit: limit }),
         _expand: "customerType",
-
       },
     });
     yield put({
       type: SUCCESS(ORDER_ACTION.GET_ORDER_LIST),
       payload: {
         data: result.data,
+        meta: {
+          total: parseInt(result.headers["x-total-count"]),
+        },
       },
     });
   } catch (error) {

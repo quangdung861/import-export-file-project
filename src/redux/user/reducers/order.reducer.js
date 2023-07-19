@@ -10,6 +10,7 @@ const initialState = {
   },
   orderList: {
     data: [],
+    meta: {},
     loading: false,
     error: null,
   },
@@ -74,12 +75,13 @@ const orderReducer = createReducer(initialState, (builder) => {
       };
     })
     .addCase(SUCCESS(ORDER_ACTION.GET_ORDER_LIST), (state, action) => {
-      const { data } = action.payload;
+      const { data, meta } = action.payload;
       return {
         ...state,
         orderList: {
           ...state.orderList,
           data,
+          meta,
           loading: false,
         },
       };
